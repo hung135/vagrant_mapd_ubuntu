@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "minimal/xenial64"
+  config.vm.box = "xcoo/xenial64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -46,7 +46,7 @@ Vagrant.configure(2) do |config|
    config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
-      vb.cpus="8" 
+      vb.cpus="4" 
   #   # Customize the amount of memory on the VM:
     vb.memory = "4096"
    end
@@ -72,6 +72,7 @@ Vagrant.configure(2) do |config|
 #sed -i 's/^# deb-src http:/deb-src http:/g" /etc/apt/source.list
 sed -i 's/^# deb-src http:/deb-src http:/g' /etc/apt/sources.list
 sudo apt update
+sudo apt upgrade -y
 sudo apt install -y \
     build-essential \
     cmake \
@@ -106,7 +107,9 @@ sudo apt install -y \
     libsnappy-dev \
     zlib1g-dev \
     autoconf \
-    autoconf-archive
+    autoconf-archive \
+    vim \
+    fish
 sudo apt build-dep -y thrift-compiler
 VERS=0.10.0
 wget http://apache.claz.org/thrift/$VERS/thrift-$VERS.tar.gz
