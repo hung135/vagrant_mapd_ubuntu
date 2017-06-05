@@ -67,6 +67,10 @@ Vagrant.configure(2) do |config|
    config.vm.provision "shell", inline: <<-SHELL
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
+
+# need to make sure source.list have source code repo uncommented out
+#sed -i 's/^# deb-src http:/deb-src http:/g" /etc/apt/source.list
+sed -i 's/^# deb-src http:/deb-src http:/g' /etc/apt/sources.list
 sudo apt update
 sudo apt install -y \
     build-essential \
@@ -103,5 +107,74 @@ sudo apt install -y \
     zlib1g-dev \
     autoconf \
     autoconf-archive
+sudo apt build-dep -y thrift-compiler
+VERS=0.10.0
+wget http://apache.claz.org/thrift/$VERS/thrift-$VERS.tar.gz
+tar xvf thrift-$VERS.tar.gz
+pushd thrift-$VERS
+./configure \
+    --with-lua=no \
+    --with-python=no \
+    --with-php=no \
+    --with-ruby=no \
+    --prefix=/usr/local/mapd-deps
+make -j $(nproc)
+sudo make install
+popd
+
+VERS=1.11.3
+wget --continue https://github.com/Blosc/c-blosc/archive/v$VERS.tar.gz
+tar xvf v$VERS.tar.gz
+BDIR="c-blosc-$VERS/build"
+rm -rf "$BDIR"
+mkdir -p "$BDIR"
+pushd "$BDIR"
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local/mapd-deps \
+    -DBUILD_BENCHMARKS=off \
+    -DBUILD_TESTS=off \
+    -DPREFER_EXTERNAL_SNAPPY=off \
+    -DPREFER_EXTERNAL_ZLIB=off \
+    -DPREFER_EXTERNAL_ZSTD=off \
+    ..
+make -j $(nproc)
+sudo make install
+popd
+
+VERS=2017.04.10.00
+wget --continue https://github.com/facebook/folly/archive/v$VERS.tar.gz
+tar xvf v$VERS.tar.gz
+pushd folly-$VERS/folly
+/usr/bin/autoreconf -ivf
+./configure --prefix=/usr/local/mapd-deps
+make -j $(nproc)
+sudo make install
+popd
+
+VERS=1.21-45
+wget --continue https://github.com/jarro2783/bisonpp/archive/$VERS.tar.gz
+tar xvf $VERS.tar.gz
+pushd bisonpp-$VERS
+./configure
+make -j $(nproc)
+sudo make install
+popd
+wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+sudo apt-get update
+sudo apt-get -y install cuda
+git clone https://github.com/mapd/mapd-core
+
+
+sudo echo "LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH" >>etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/lib/jvm/default-java/jre/lib/amd64/server:$LD_LIBRARY_PATH" >>etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/local/mapd-deps/lib:$LD_LIBRARY_PATH" >>etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/local/mapd-deps/lib64:$LD_LIBRARY_PATH" >>etc/profile.d/mapd-deps.sh
+
+sudo echo "PATH=/usr/local/cuda/bin:$PATH" >>etc/profile.d/mapd-deps.sh
+sudo echo "PATH=/usr/local/mapd-deps/bin:$PATH" >>etc/profile.d/mapd-deps.sh
+
+sudo echo "export LD_LIBRARY_PATH PATH" >>etc/profile.d/mapd-deps.sh
    SHELL
 end
