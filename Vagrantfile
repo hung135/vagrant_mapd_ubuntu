@@ -171,13 +171,13 @@ git clone https://github.com/mapd/mapd-core
 chown -R vagrant:vagrant ./mapd-core/
 
 sudo touch /etc/profile.d/mapd-deps.sh
-sudo echo "LD_LIBRARY_PATH=/usr/local/cuda/lib64:\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
-sudo echo "LD_LIBRARY_PATH=/usr/lib/jvm/default-java/jre/lib/amd64/server:\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
-sudo echo "LD_LIBRARY_PATH=/usr/local/mapd-deps/lib:\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
-sudo echo "LD_LIBRARY_PATH=/usr/local/mapd-deps/lib64:\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/local/cuda/lib64:\\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/lib/jvm/default-java/jre/lib/amd64/server:\\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/local/mapd-deps/lib:\\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
+sudo echo "LD_LIBRARY_PATH=/usr/local/mapd-deps/lib64:\\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
 
-sudo echo "PATH=/usr/local/cuda/bin:\$PATH" >>/etc/profile.d/mapd-deps.sh
-sudo echo "PATH=/usr/local/mapd-deps/bin:\$PATH" >>/etc/profile.d/mapd-deps.sh
+sudo echo "PATH=/usr/local/cuda/bin:\\$PATH" >>/etc/profile.d/mapd-deps.sh
+sudo echo "PATH=/usr/local/mapd-deps/bin:\\$PATH" >>/etc/profile.d/mapd-deps.sh
 
 sudo echo "export LD_LIBRARY_PATH PATH" >>/etc/profile.d/mapd-deps.sh
    SHELL
