@@ -180,6 +180,16 @@ sudo echo "PATH=/usr/local/mapd-deps/bin:\\$PATH" >>/etc/profile.d/mapd-deps.sh
 
 sudo echo "export LD_LIBRARY_PATH PATH" >>/etc/profile.d/mapd-deps.sh
 
+LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=/usr/lib/jvm/default-java/jre/lib/amd64/server:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=/usr/local/mapd-deps/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=/usr/local/mapd-deps/lib64:$LD_LIBRARY_PATH
+
+PATH=/usr/local/cuda/bin:$PATH
+PATH=/usr/local/mapd-deps/bin:$PATH
+
+export LD_LIBRARY_PATH PATH
+
 chown -R vagrant:vagrant ./mapd-core/
 pushd mapd-core/build
 cmake -DCMAKE_BUILD_TYPE=debug ..
