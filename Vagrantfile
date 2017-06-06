@@ -168,8 +168,7 @@ sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 sudo apt-get update
 sudo apt-get -y install cuda
 git clone https://github.com/mapd/mapd-core
-chown -R vagrant:vagrant ./mapd-core/
-
+sudo mkdir ./mapd-core/build
 sudo touch /etc/profile.d/mapd-deps.sh
 sudo echo "LD_LIBRARY_PATH=/usr/local/cuda/lib64:\\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
 sudo echo "LD_LIBRARY_PATH=/usr/lib/jvm/default-java/jre/lib/amd64/server:\\$LD_LIBRARY_PATH" >>/etc/profile.d/mapd-deps.sh
@@ -180,5 +179,11 @@ sudo echo "PATH=/usr/local/cuda/bin:\\$PATH" >>/etc/profile.d/mapd-deps.sh
 sudo echo "PATH=/usr/local/mapd-deps/bin:\\$PATH" >>/etc/profile.d/mapd-deps.sh
 
 sudo echo "export LD_LIBRARY_PATH PATH" >>/etc/profile.d/mapd-deps.sh
+
+chown -R vagrant:vagrant ./mapd-core/
+pushd mapd-core/build
+cmake -DCMAKE_BUILD_TYPE=debug ..
+make -j 4
    SHELL
+
 end
